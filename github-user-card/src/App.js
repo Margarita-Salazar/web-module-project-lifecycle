@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import axios from 'axios';
+import GithubCard from './GitHubCard';
 
 class App extends React.Component{
   state = {
@@ -9,6 +10,7 @@ class App extends React.Component{
   componentDidMount(){
     axios.get("https://api.github.com/users/Margarita-Salazar")
     .then(res=>{
+      console.log(res.data)
       this.setState({
         user: res.data
       })
@@ -26,7 +28,7 @@ class App extends React.Component{
         </h1>
       </header>
       <div className="user-container">
-        <h2>{this.state.user.name}</h2>
+        <GithubCard user={this.state.user}/>
       </div>
     </div>
   )}
