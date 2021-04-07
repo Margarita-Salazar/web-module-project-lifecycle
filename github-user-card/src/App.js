@@ -5,18 +5,26 @@ import GithubCard from './GitHubCard';
 
 class App extends React.Component{
   state = {
-    user: {}
+    users: [],
   }
+
   componentDidMount(){
     axios.get("https://api.github.com/users/Margarita-Salazar")
-    .then(res=>{
-      console.log(res.data)
+    .then(res=> {
       this.setState({
-        user: res.data
+        users: [...this.state.users, res.data]
       })
     })
-    .catch(err=>{
-      console.log(err.response)
+    axios.get("https://api.github.com/users/Margarita-Salazar/followers")
+    .then(res=>{
+      res.data.forEach(user=>{
+        axios.get(user.url)
+        .then(res=>{
+          this.setState({
+            users: [...this.state.users, res.data]
+          })
+        })
+      })
     })
   }
   render(){
@@ -28,7 +36,9 @@ class App extends React.Component{
         </h1>
       </header>
       <div className="user-container">
-        <GithubCard user={this.state.user}/>
+        {this.state.users.map(user=>{
+          return(<GithubCard key={user.id} user={user}/>)
+        })}
       </div>
     </div>
   )}
